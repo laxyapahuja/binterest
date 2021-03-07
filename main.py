@@ -11,7 +11,7 @@ for pin in pins:
     try:
         urls.append(pin['images']['orig']['url'])
     except KeyError:
-        break
+        continue
 
 if not os.path.exists(os.getcwd().replace('\\','/')+'/boards/'+pins[0]['board']['url']):
     os.makedirs(os.getcwd().replace('\\','/')+'/boards/'+pins[0]['board']['url'])
@@ -20,6 +20,9 @@ n=0
 for url in urls:
     n=n+1
     r = requests.get(url)
-    with open(os.getcwd().replace('\\','/')+'/boards/'+pins[0]['board']['url']+url.split('/')[-1], "wb") as f:
-        f.write(r.content)
-        print(url.split('/')[-1] + ' downloaded. ' + '[' + str(n) + '/' + str(len(urls)) + ']')
+    if not os.path.exists(os.getcwd().replace('\\','/')+'/boards/'+pins[0]['board']['url']+url.split('/')[-1]):
+        with open(os.getcwd().replace('\\','/')+'/boards/'+pins[0]['board']['url']+url.split('/')[-1], "wb") as f:
+            f.write(r.content)
+            print(url.split('/')[-1] + ' downloaded. ' + '[' + str(n) + '/' + str(len(urls)) + ']')
+    else:
+        print(url.split('/')[-1] + ' retrieved. ' + '[' + str(n) + '/' + str(len(urls)) + ']')
